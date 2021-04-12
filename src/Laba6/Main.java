@@ -43,7 +43,7 @@ public class Main extends JFrame {
                 if (!pauseMenuItem.isEnabled() &&
                         !resumeMenuItem.isEnabled()) {
 // Ни один из пунктов меню не являются
-// доступными - сделать доступным "Паузу"
+// доступными - сделать доступным "Паузу" test
                     pauseMenuItem.setEnabled(true);
                     stopActionOnMenuItem.setEnabled(true);
                     stopActionOffMenuItem.setEnabled(false);
