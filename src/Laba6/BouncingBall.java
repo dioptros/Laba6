@@ -24,7 +24,7 @@ public class BouncingBall implements Runnable {
     public BouncingBall(Field field) {
 // Необходимо иметь ссылку на поле, по которому прыгает мяч,
 // чтобы отслеживать выход за его пределы
-        // через getWidth(), getHeight()
+// через getWidth(), getHeight()
         this.field = field;
 // Радиус мяча случайного размера
         radius = new Double(Math.random()*(MAX_RADIUS -
@@ -59,56 +59,52 @@ public class BouncingBall implements Runnable {
         try {
 // Крутим бесконечный цикл, т.е. пока нас не прервут,
 // мы не намерены завершаться
-            while (true) {
+            while(true) {
 // Синхронизация потоков на самом объекте поля
 // Если движение разрешено - управление будет
 // возвращено в метод
 // В противном случае - активный поток заснѐт
                 field.canMove(this);
+                if (radius <= 20){
+                    field.stopmove(this);
+                }
                 if (x + speedX <= radius) {
 // Достигли левой стенки, отскакиваем право
                     speedX = -speedX;
                     x = radius;
-                } else if (x + speedX >= field.getWidth() - radius) {
+                } else
+                if (x + speedX >= field.getWidth() - radius) {
 // Достигли правой стенки, отскок влево
                     speedX = -speedX;
-                    x = new Double(field.getWidth() - radius).intValue();
-                } else if (y + speedY <= radius) {
+                    x=new Double(field.getWidth()-radius).intValue();
+                } else
+                if (y + speedY <= radius) {
 // Достигли верхней стенки
                     speedY = -speedY;
                     y = radius;
-                } else if (y + speedY >= field.getHeight() - radius) {
+                } else
+                if (y + speedY >= field.getHeight() - radius) {
 // Достигли нижней стенки
                     speedY = -speedY;
-                    y = new Double(field.getHeight() - radius).intValue();
+                    y=new Double(field.getHeight()-radius).intValue();
                 } else {
 // Просто смещаемся
                     x += speedX;
                     y += speedY;
                 }
-                Thread.sleep(16 - speed);
+// Засыпаем на X миллисекунд, где X определяется
+// исходя из скорости
+// Скорость = 1 (медленно), засыпаем на 15 мс.
+// Скорость = 15 (быстро), засыпаем на 1 мс.
+                Thread.sleep(16-speed);
             }
         } catch (InterruptedException ex) {
 // Если нас прервали, то ничего не делаем
 // и просто выходим (завершаемся)
         }
     }
-
-// Засыпаем на X миллисекунд, где X определяется
-// исходя из скорости
-// Скорость = 1 (медленно), засыпаем на 15 мс.
-// Скорость = 15 (быстро), засыпаем на 1 мс.
-                Thread.sleep(16 - speed);
-            }
-            field.stop(this);
-            if (radius < 10) {
-            } else
-            {}
-
-
-
     // Метод прорисовки самого себя
-   public void paint(Graphics2D canvas) {
+    public void paint(Graphics2D canvas) {
         canvas.setColor(color);
         canvas.setPaint(color);
         Ellipse2D.Double ball = new Ellipse2D.Double(x-radius, y-radius,

@@ -17,17 +17,21 @@ public class Main extends JFrame {
     private static final int HEIGHT = 500;
     private JMenuItem pauseMenuItem;
     private JMenuItem resumeMenuItem;
+    private JMenuItem stopActionOnMenuItem;
+    private JMenuItem stopActionOffMenuItem;
+
     // Поле, по которому прыгают мячи
     private Field field = new Field();
+
     // Конструктор главного окна приложения
     public Main() {
         super("Программирование и синхронизация потоков");
         setSize(WIDTH, HEIGHT);
         Toolkit kit = Toolkit.getDefaultToolkit();
 // Отцентрировать окно приложения на экране
-        setLocation((kit.getScreenSize().width - WIDTH)/2,
-                (kit.getScreenSize().height - HEIGHT)/2);
-// Установить начальное состояние окна развѐрнутым на весь экран
+        setLocation((kit.getScreenSize().width - WIDTH) / 2,
+                (kit.getScreenSize().height - HEIGHT) / 2);
+// Установить начальное состояние окна развѐрнутым на весь экран}
         setExtendedState(MAXIMIZED_BOTH);
 // Создать меню
         JMenuBar menuBar = new JMenuBar();
@@ -41,6 +45,8 @@ public class Main extends JFrame {
 // Ни один из пунктов меню не являются
 // доступными - сделать доступным "Паузу"
                     pauseMenuItem.setEnabled(true);
+                    stopActionOnMenuItem.setEnabled(true);
+                    stopActionOffMenuItem.setEnabled(false);
                 }
             }
         };
@@ -48,14 +54,14 @@ public class Main extends JFrame {
         ballMenu.add(addBallAction);
         JMenu controlMenu = new JMenu("Управление");
         menuBar.add(controlMenu);
-        Action pauseAction = new AbstractAction("Приостановить движение"){
+        Action pauseAction = new AbstractAction("Приостановить движение") {
             public void actionPerformed(ActionEvent event) {
                 field.pause();
                 pauseMenuItem.setEnabled(false);
                 resumeMenuItem.setEnabled(true);
+                stopActionOnMenuItem.setEnabled(true);
+                stopActionOffMenuItem.setEnabled(false);
             }
-
-
         };
         pauseMenuItem = controlMenu.add(pauseAction);
         pauseMenuItem.setEnabled(false);
@@ -64,27 +70,36 @@ public class Main extends JFrame {
                 field.resume();
                 pauseMenuItem.setEnabled(true);
                 resumeMenuItem.setEnabled(false);
+                stopActionOnMenuItem.setEnabled(true);
+                stopActionOffMenuItem.setEnabled(false);
             }
         };
-
         resumeMenuItem = controlMenu.add(resumeAction);
         resumeMenuItem.setEnabled(false);
-        resumeMenuItem=controlMenu.add(resumeAction);
-        resumeMenuItem.setEnabled(false);
-        Action magnetism =new AbstractAction("Stop") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // field.stop(this);
-                pauseMenuItem.setEnabled(false);
-                resumeMenuItem.setEnabled(true);
-                StopMenuItem.setEnabled(false);
+
+        Action stopActionOn = new AbstractAction("Остановить маленький мяч") {
+            public void actionPerformed(ActionEvent event) {
+                field.stoptrue();
+                stopActionOnMenuItem.setEnabled(false);
+                stopActionOffMenuItem.setEnabled(true);
             }
         };
-        StopMenuItem=controlMenu.add(stop);
-        StopMenuItem.setEnabled(false);
+        stopActionOnMenuItem = controlMenu.add(stopActionOn);
+        stopActionOnMenuItem.setEnabled(false);
+
+        Action stopActionOff = new AbstractAction("Возобновить маленький мяч") {
+            public void actionPerformed(ActionEvent event) {
+                field.stopfalse();
+                stopActionOffMenuItem.setEnabled(false);
+                stopActionOnMenuItem.setEnabled(true);
+            }
+        };
+        stopActionOffMenuItem = controlMenu.add(stopActionOff);
+        stopActionOffMenuItem.setEnabled(false);
 // Добавить в центр граничной компоновки поле Field
         getContentPane().add(field, BorderLayout.CENTER);
     }
+
     // Главный метод приложения
     public static void main(String[] args) {
 // Создать и сделать видимым главное окно приложения

@@ -12,9 +12,9 @@ import javax.swing.Timer;
 public class Field extends JPanel {
     // Флаг приостановленности движения
     private boolean paused;
+    private boolean stop;
     // Динамический список скачущих мячей
     private ArrayList<BouncingBall> balls = new ArrayList<BouncingBall>(10);
-    private boolean stop;
     // Класс таймер отвечает за регулярную генерацию событий ActionEvent
 // При создании его экземпляра используется анонимный класс,
 // реализующий интерфейс ActionListener
@@ -27,7 +27,7 @@ public class Field extends JPanel {
     // Конструктор класса BouncingBall
     public Field() {
 // Установить цвет заднего фона белым
-        setBackground(Color.black);
+        setBackground(Color.WHITE);
 // Запустить таймер
         repaintTimer.start();
     }
@@ -47,9 +47,8 @@ public class Field extends JPanel {
 // Всю инициализацию положения, скорости, размера, цвета
 // BouncingBall выполняет сам в конструкторе
         balls.add(new BouncingBall(this));
-    }
-    // Метод синхронизированный, т.е. только один поток может
-// одновременно быть внутри
+    }// Метод синхронизированный, т.е. только один поток может
+    // одновременно быть внутри
     public synchronized void pause() {
 // Включить режим паузы
         paused = true;
@@ -62,11 +61,16 @@ public class Field extends JPanel {
 // Будим все ожидающие продолжения потоки
         notifyAll();
     }
-    public synchronized void stop(BouncingBall bouncingBall){
-        stop = true;
-    }
     // Синхронизированный метод проверки, может ли мяч двигаться
 // (не включен ли режим паузы?)
+    public synchronized void stoptrue() {
+        stop = true;
+    }
+    public synchronized void stopfalse() {
+        stop = false;
+        notifyAll();
+    }
+
     public synchronized void canMove(BouncingBall ball) throws
             InterruptedException {
         if (paused) {
@@ -75,5 +79,10 @@ public class Field extends JPanel {
             wait();
         }
     }
+    public synchronized void stopmove(BouncingBall ball) throws
+            InterruptedException {
+        if (stop) {
+            wait();
+        }
+    }
 }
-
